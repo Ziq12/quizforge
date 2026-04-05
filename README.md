@@ -46,3 +46,45 @@ quizforge/
 • Export — downloads database_backup.json via the Backup button
 
 • Import — smart merge (no duplicate IDs) when restoring a backup file
+
+## Json Format
+```
+{
+  "topic": "Your Topic Here",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Your first question goes here?",
+      "options": {
+        "A": "First option",
+        "B": "Second option",
+        "C": "Third option",
+        "D": "Fourth option"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 2,
+      "question": "Your second question goes here?",
+      "options": {
+        "A": "First option",
+        "B": "Second option",
+        "C": "Third option",
+        "D": "Fourth option"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 3,
+      "question": "Your third question goes here?",
+      "options": {
+        "A": "First option",
+        "B": "Second option",
+        "C": "Third option",
+        "D": "Fourth option"
+      },
+      "answer": "C"
+    }
+  ]
+}
+```
