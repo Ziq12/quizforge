@@ -1,0 +1,45 @@
+{
+  "quizzes": [
+    {
+      "id": "1700000000000",
+      "topic": "Network Access",
+      "createdAt": "2024-01-01T00:00:00.000Z",
+      "questions": [
+        {
+          "id": 1,
+          "question": "Which statement best describes the function of a VLAN?",
+          "options": {
+            "A": "It increases bandwidth between switches",
+            "B": "It logically segments a network into separate broadcast domains",
+            "C": "It encrypts traffic between devices",
+            "D": "It replaces routing protocols"
+          },
+          "answer": "B"
+        },
+        {
+          "id": 2,
+          "question": "Which command is used to assign a switch port to a VLAN?",
+          "options": {
+            "A": "switchport mode trunk",
+            "B": "switchport access vlan 10",
+            "C": "vlan database",
+            "D": "ip address vlan 10"
+          },
+          "answer": "B"
+        },
+        {
+          "id": 3,
+          "question": "What is the default VLAN on most Cisco switches?",
+          "options": {
+            "A": "VLAN 0",
+            "B": "VLAN 1",
+            "C": "VLAN 10",
+            "D": "VLAN 100"
+          },
+          "answer": "B"
+        }
+      ]
+    }
+  ],
+  "attempts": []
+}

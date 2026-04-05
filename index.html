@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QuizForge</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Sora:wght@300;400;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0d0f14;
+      --surface: #13161e;
+      --surface2: #1a1e2a;
+      --border: #232840;
+      --accent: #5b7fff;
+      --accent2: #a78bfa;
+      --text: #e8eaf0;
+      --muted: #666d8a;
+      --green: #34d399;
+      --red: #f87171;
+      --yellow: #fbbf24;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      background-image: radial-gradient(ellipse at 20% 10%, #1a1f3a 0%, transparent 50%),
+                        radial-gradient(ellipse at 80% 80%, #111827 0%, transparent 50%);
+    }
+
+    /* ── NAV ── */
+    nav {
+      border-bottom: 1px solid var(--border);
+      background: rgba(13,15,20,0.85);
+      backdrop-filter: blur(16px);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1100px; margin: 0 auto;
+      padding: 0 1.5rem;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 60px;
+    }
+    .logo {
+      font-size: 1.25rem; font-weight: 800; letter-spacing: -0.03em;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-actions { display: flex; gap: 0.5rem; }
+
+    /* ── BUTTONS ── */
+    .btn {
+      padding: 0.45rem 1rem; border-radius: 8px;
+      font-family: 'Sora', sans-serif; font-size: 0.82rem; font-weight: 600;
+      border: none; cursor: pointer; transition: all 0.18s ease;
+      display: inline-flex; align-items: center; gap: 0.4rem;
+    }
+    .btn-ghost {
+      background: transparent; color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--surface2); color: var(--text); border-color: var(--accent); }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), #4066ff);
+      color: #fff; box-shadow: 0 0 20px rgba(91,127,255,0.3);
+    }
+    .btn-primary:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(91,127,255,0.45); }
+    .btn-danger { background: rgba(248,113,113,0.12); color: var(--red); border: 1px solid rgba(248,113,113,0.3); }
+    .btn-danger:hover { background: rgba(248,113,113,0.2); }
+
+    /* ── MAIN LAYOUT ── */
+    .main { max-width: 1100px; margin: 0 auto; padding: 2.5rem 1.5rem; }
+    .hidden { display: none !important; }
+
+    /* ── SECTION HEADERS ── */
+    .section-label {
+      font-size: 0.7rem; font-weight: 600; letter-spacing: 0.15em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
+    }
+    .section-title {
+      font-size: 1.6rem; font-weight: 800; letter-spacing: -0.03em;
+      margin-bottom: 0.35rem;
+    }
+    .section-sub { color: var(--muted); font-size: 0.9rem; margin-bottom: 1.75rem; }
+
+    /* ── CARDS ── */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 14px; padding: 1.5rem;
+    }
+    .card-header { margin-bottom: 1rem; }
+
+    /* ── QUIZ LIST ── */
+    #quiz-list { display: grid; gap: 0.6rem; }
+    .quiz-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .quiz-card:hover { border-color: var(--accent); background: #1e2235; transform: translateX(3px); }
+    .quiz-topic { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.2rem; }
+    .quiz-meta { font-size: 0.78rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .btn-start {
+      background: transparent; border: 1px solid var(--border); color: var(--accent);
+      padding: 0.3rem 0.85rem; border-radius: 6px; cursor: pointer;
+      font-family: 'Sora', sans-serif; font-size: 0.8rem; font-weight: 600;
+      transition: all 0.18s; white-space: nowrap;
+    }
+    .btn-start:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+    /* ── HISTORY LIST ── */
+    #history-list { display: grid; gap: 0.6rem; }
+    .attempt-card {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem 1.25rem;
+      display: flex; align-items: center; justify-content: space-between;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .attempt-card:hover { border-color: var(--accent2); background: #1e2235; transform: translateX(3px); }
+    .attempt-topic { font-weight: 600; font-size: 0.92rem; margin-bottom: 0.18rem; }
+    .attempt-date { font-size: 0.75rem; color: var(--muted); font-family: 'DM Mono', monospace; }
+    .attempt-wrong { font-size: 0.78rem; color: var(--muted); margin-top: 0.15rem; }
+    .attempt-score {
+      font-family: 'DM Mono', monospace; font-size: 1.5rem; font-weight: 500;
+      min-width: 70px; text-align: right;
+    }
+    .score-high { color: var(--green); }
+    .score-mid { color: var(--yellow); }
+    .score-low { color: var(--red); }
+
+    /* ── JSON EDITOR ── */
+    .json-area {
+      width: 100%; background: #0b0d12; border: 1px solid var(--border);
+      border-radius: 10px; padding: 1rem; color: var(--text);
+      font-family: 'DM Mono', monospace; font-size: 0.82rem; line-height: 1.6;
+      resize: vertical; min-height: 200px; outline: none;
+      transition: border-color 0.2s;
+    }
+    .json-area:focus { border-color: var(--accent); }
+
+    /* ── DATABASE TOOLS ── */
+    .db-tools { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .import-drop {
+      border: 2px dashed var(--border); border-radius: 10px;
+      padding: 1.25rem; text-align: center; color: var(--muted);
+      cursor: pointer; transition: all 0.2s; font-size: 0.85rem;
+    }
+    .import-drop:hover { border-color: var(--accent2); color: var(--accent2); background: rgba(167,139,250,0.05); }
+
+    /* ── EXAM SECTION ── */
+    #section-exam { max-width: 700px; margin: 0 auto; }
+    .exam-header { margin-bottom: 2rem; }
+    .exam-header-top {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;
+    }
+    #exam-topic { font-weight: 700; font-size: 1.1rem; }
+    #question-counter { font-family: 'DM Mono', monospace; font-size: 0.82rem; color: var(--muted); }
+    .progress-track {
+      height: 4px; background: var(--border); border-radius: 4px; overflow: hidden;
+    }
+    #progress-bar {
+      height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2));
+      border-radius: 4px; transition: width 0.4s ease;
+    }
+
+    #question-text {
+      font-size: 1.15rem; font-weight: 600; line-height: 1.6;
+      margin-bottom: 1.5rem; letter-spacing: -0.01em;
+    }
+    #options-container { display: grid; gap: 0.6rem; margin-bottom: 2rem; }
+    .option-btn {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 10px; padding: 0.9rem 1.2rem;
+      display: flex; align-items: center; gap: 1rem;
+      cursor: pointer; transition: all 0.18s; text-align: left; width: 100%;
+      font-family: 'Sora', sans-serif;
+    }
+    .option-btn:hover { border-color: var(--accent); background: #1e2235; }
+    .option-btn.selected { border-color: var(--accent); background: rgba(91,127,255,0.12); box-shadow: inset 0 0 0 1px var(--accent); }
+    .option-key {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: var(--border); display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Mono', monospace; font-size: 0.85rem; font-weight: 500;
+      flex-shrink: 0; transition: all 0.18s;
+    }
+    .option-btn.selected .option-key { background: var(--accent); color: #fff; }
+    .option-val { font-size: 0.92rem; line-height: 1.4; color: var(--text); }
+
+    .exam-nav { display: flex; justify-content: space-between; align-items: center; }
+
+    /* ── RESULT SECTION ── */
+    #section-result { max-width: 700px; margin: 0 auto; }
+    .result-hero {
+      text-align: center; padding: 2.5rem; margin-bottom: 2rem;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
+    }
+    .result-hero-label { font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--muted); margin-bottom: 0.5rem; }
+    .result-score-num { font-size: 5rem; font-weight: 800; line-height: 1; font-family: 'DM Mono', monospace; }
+    #result-correct { color: var(--muted); font-size: 0.9rem; margin-top: 0.5rem; }
+    #result-topic { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.5rem; }
+
+    /* ── DETAIL ITEMS ── */
+    .detail-item {
+      border-radius: 10px; padding: 1rem 1.2rem; margin-bottom: 0.6rem;
+      border-left: 3px solid transparent;
+    }
+    .detail-item.correct { background: rgba(52,211,153,0.06); border-left-color: var(--green); }
+    .detail-item.wrong { background: rgba(248,113,113,0.06); border-left-color: var(--red); }
+    .detail-header { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.4rem; }
+    .detail-num { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--muted); }
+    .detail-badge { font-size: 0.75rem; font-weight: 600; }
+    .detail-item.correct .detail-badge { color: var(--green); }
+    .detail-item.wrong .detail-badge { color: var(--red); }
+    .detail-question { font-size: 0.9rem; font-weight: 600; margin-bottom: 0.5rem; line-height: 1.4; }
+    .detail-answers { font-size: 0.82rem; display: grid; gap: 0.3rem; }
+    .your-answer { color: var(--red); }
+    .correct-answer { color: var(--green); }
+
+    /* ── REVIEW SECTION ── */
+    #section-review { max-width: 700px; margin: 0 auto; }
+    #review-meta { color: var(--muted); font-size: 0.85rem; font-family: 'DM Mono', monospace; margin-bottom: 1.5rem; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state { color: var(--muted); font-size: 0.88rem; padding: 1.25rem; text-align: center; }
+
+    /* ── GRID LAYOUT ── */
+    .home-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    @media (max-width: 768px) {
+      .home-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ── TOAST ── */
+    .toast {
+      position: fixed; bottom: 1.5rem; right: 1.5rem;
+      padding: 0.75rem 1.25rem; border-radius: 10px;
+      font-size: 0.85rem; font-weight: 500; z-index: 9999;
+      display: flex; align-items: center; gap: 0.5rem;
+      transform: translateX(120%); transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1);
+      backdrop-filter: blur(12px);
+    }
+    .toast.show { transform: translateX(0); }
+    .toast-success { background: rgba(52,211,153,0.15); border: 1px solid rgba(52,211,153,0.3); color: var(--green); }
+    .toast-error { background: rgba(248,113,113,0.15); border: 1px solid rgba(248,113,113,0.3); color: var(--red); }
+
+    /* ── DIVIDER ── */
+    .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo">⬡ QuizForge</div>
+    <div class="nav-actions">
+      <button class="btn btn-ghost" onclick="exportDB()">⬇ Backup</button>
+      <button class="btn btn-ghost" onclick="triggerImport()">⬆ Restore</button>
+      <button class="btn btn-primary" onclick="loadHome()">⌂ Home</button>
+      <input type="file" id="import-file" accept=".json" class="hidden" onchange="importDB(this)" />
+    </div>
+  </div>
+</nav>
+
+<div class="main">
+
+  <!-- ════════════════════ HOME ════════════════════ -->
+  <div id="section-home">
+
+    <!-- Quiz Library + History -->
+    <div class="home-grid">
+
+      <!-- Available Quizzes -->
+      <div class="card">
+        <div class="card-header">
+          <div class="section-label">Library</div>
+          <div class="section-title" style="font-size:1.2rem">Available Quizzes</div>
+        </div>
+        <div id="quiz-list"></div>
+      </div>
+
+      <!-- Attempt History -->
+      <div class="card">
+        <div class="card-header">
+          <div class="section-label">Records</div>
+          <div class="section-title" style="font-size:1.2rem">Attempt History</div>
+        </div>
+        <div id="history-list"></div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- Create Quiz -->
+    <div>
+      <div class="section-label">Create</div>
+      <div class="section-title">New Quiz</div>
+      <div class="section-sub">Paste your quiz JSON schema below. It must include a <code style="font-family:'DM Mono',monospace;color:var(--accent2)">topic</code> and a <code style="font-family:'DM Mono',monospace;color:var(--accent2)">questions</code> array.</div>
+
+      <div class="card">
+        <textarea id="quiz-json" class="json-area" placeholder='{"topic":"My Topic","questions":[{"id":1,"question":"What is ...?","options":{"A":"...","B":"...","C":"...","D":"..."},"answer":"A"}]}'></textarea>
+        <div style="margin-top:1rem;display:flex;justify-content:flex-end;">
+          <button class="btn btn-primary" onclick="createQuiz()">+ Upload Quiz</button>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider" />
+
+    <!-- DB Tools -->
+    <div>
+      <div class="section-label">Database</div>
+      <div class="section-title">Data Management</div>
+      <div class="section-sub">Export your database for backup or import a previously exported file to merge records.</div>
+      <div class="db-tools">
+        <button class="btn btn-ghost" onclick="exportDB()">⬇ Download Database Backup</button>
+        <div class="import-drop" onclick="triggerImport()">
+          📂 Click to Restore Database from backup file
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /section-home -->
+
+
+  <!-- ════════════════════ EXAM ════════════════════ -->
+  <div id="section-exam" class="hidden">
+    <div class="exam-header">
+      <div class="exam-header-top">
+        <div id="exam-topic"></div>
+        <div id="question-counter"></div>
+      </div>
+      <div class="progress-track">
+        <div id="progress-bar" style="width:0%"></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div id="question-text"></div>
+      <div id="options-container"></div>
+      <div class="exam-nav">
+        <button id="btn-prev" class="btn btn-ghost" onclick="prevQuestion()">← Back</button>
+        <button id="btn-next" class="btn btn-primary" onclick="nextQuestion()">Next →</button>
+        <button id="btn-submit" class="btn btn-primary hidden" onclick="submitQuiz()">Submit Quiz ✓</button>
+      </div>
+    </div>
+
+    <div style="margin-top:1rem;text-align:center;">
+      <button class="btn btn-ghost" onclick="loadHome()">✕ Abandon Quiz</button>
+    </div>
+  </div><!-- /section-exam -->
+
+
+  <!-- ════════════════════ RESULT ════════════════════ -->
+  <div id="section-result" class="hidden">
+    <div class="result-hero">
+      <div class="result-hero-label">Quiz Complete</div>
+      <div id="result-topic"></div>
+      <div id="result-score" class="result-score-num"></div>
+      <div id="result-correct"></div>
+    </div>
+
+    <div class="section-label" style="margin-bottom:0.75rem">Breakdown</div>
+    <div id="result-details"></div>
+
+    <div style="margin-top:1.5rem;display:flex;gap:0.75rem;justify-content:center;">
+      <button class="btn btn-ghost" onclick="loadHome()">⌂ Back to Home</button>
+    </div>
+  </div><!-- /section-result -->
+
+
+  <!-- ════════════════════ REVIEW ════════════════════ -->
+  <div id="section-review" class="hidden">
+    <div class="section-label">Review Mode</div>
+    <div class="section-title" id="review-title"></div>
+    <div id="review-meta"></div>
+    <div id="review-content"></div>
+    <div style="margin-top:1.5rem;">
+      <button class="btn btn-ghost" onclick="loadHome()">← Back to Home</button>
+    </div>
+  </div><!-- /section-review -->
+
+</div><!-- /main -->
+
+<script src="script.js"></script>
+</body>
+</html>
